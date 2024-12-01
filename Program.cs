@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 Order order1 = new Order
 {
     OrderId = 1,
-    CustomerName = "Abbos",
+    CustomerName = "Shaha",
     TotalAmount = 500_000,
     Status = Status.Pending,
     OrderItems = new List<OrderItem>
@@ -37,17 +37,15 @@ var jsonOptions = new JsonSerializerOptions()
     ReferenceHandler = ReferenceHandler.Preserve
 };
 
-string text = JsonSerializer.Serialize(order1, jsonOptions);
 
-using MemoryStream memStream = new MemoryStream();
-JsonSerializer.Serialize(memStream, order1, jsonOptions);
-string originalJson = Encoding.UTF8.GetString(memStream.ToArray());
+var memStream = GetStream(order1, jsonOptions);
+string originalJson = GetString(memStream);
 Console.WriteLine(originalJson);
 
 Console.WriteLine(new string('-', 40) + '\n');
 
-string updatedJson = Encoding.UTF8.GetString(memStream.ToArray());
-updatedJson = updatedJson.Replace("\"CustomerName\": \"Abbos\"", "\"CustomerName\": \"Abbosjon\"");
+string updatedJson = GetString(memStream);
+updatedJson = updatedJson.Replace("\"CustomerName\": \"Shaha\"", "\"CustomerName\": \"Abbosjon\"");
 Console.WriteLine(updatedJson);
 
 Order newOrder = JsonSerializer.Deserialize<Order>(updatedJson, jsonOptions);
@@ -63,3 +61,12 @@ using (var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.R
 }
 
 
+string GetString(MemoryStream memStream) =>
+    Encoding.UTF8.GetString(memStream.ToArray());
+
+MemoryStream GetStream(Order order, JsonSerializerOptions jsonoptions)
+{
+    MemoryStream memStream = new MemoryStream();
+    JsonSerializer.Serialize(memStream, order, jsonOptions);
+    return memStream;
+}

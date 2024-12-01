@@ -1,0 +1,24 @@
+{
+  "$id": "1",
+  "OrderId": 1,
+  "CustomerName": "Abbos",
+  "TotalAmount": 500000,
+  "Status": "Pending",
+  "OrderItems": {
+    "$id": "2",
+    "$values": [
+      {
+        "$id": "3",
+        "ItemName": "pencil",
+        "Quantity": 4,
+        "Price": 3000
+      },
+      {
+        "$id": "4",
+        "ItemName": "pen",
+        "Quantity": 2,
+        "Price": 2500
+      }
+    ]
+  }
+}

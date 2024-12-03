@@ -1,7 +1,7 @@
 {
   "$id": "1",
   "OrderId": 1,
-  "CustomerName": "Shaha",
+  "CustomerName": "Shohruh",
   "TotalAmount": 500000,
   "Status": "Pending",
   "OrderItems": {

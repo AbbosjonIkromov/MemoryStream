@@ -1,11 +1,12 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 Order order1 = new Order
 {
     OrderId = 1,
-    CustomerName = "Shaha",
+    CustomerName = "Shohruh",
     TotalAmount = 500_000,
     Status = Status.Pending,
     OrderItems = new List<OrderItem>
@@ -40,22 +41,21 @@ var jsonOptions = new JsonSerializerOptions()
 
 var memStream = GetStream(order1, jsonOptions);
 string originalJson = GetString(memStream);
+memStream.Position = 0;
 Console.WriteLine(originalJson);
 
 Console.WriteLine(new string('-', 40) + '\n');
 
-string updatedJson = GetString(memStream);
-updatedJson = updatedJson.Replace("\"CustomerName\": \"Shaha\"", "\"CustomerName\": \"Abbosjon\"");
-Console.WriteLine(updatedJson);
+JsonNode node = JsonNode.Parse(originalJson); // json ni JsonNode ga parse qilib olamiz
+node["CustomerName"] = "Abbosjon";            // kerakli atrbutni o'zgartiramiz
+string updatedJson = node.ToJsonString(jsonOptions); // jsonni jsonoptions asosida string qilib qaytaradi 
+Console.WriteLine(updatedJson);               // ekranga chiqarish
 
 Order newOrder = JsonSerializer.Deserialize<Order>(updatedJson, jsonOptions);
 Console.WriteLine(newOrder.ToString());
 
-
-
 using (var fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite))
 {
-    memStream.Seek(0, SeekOrigin.Begin);
     memStream.CopyTo(fileStream);
     Console.WriteLine("\nMemoryStream malumotlari FileStream ga yozildi.");
 }
